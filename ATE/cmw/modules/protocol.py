@@ -10,6 +10,7 @@ class CmwProtocol(object):
     def __init__(self, connection, port_name):
         self.connection = connection
         self.port_name = port_name
+        self.check_identity()
 
     def check_identity(self, spectrum_name = "Rohde&Schwarz,CMW"):
         self.print_to_log('Checking CMW Identity')

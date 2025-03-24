@@ -6,6 +6,7 @@ class SpectrumAnalyzer(object):
     def __init__(self, gpib_address):
         self.gpib_address = gpib_address
         self.connection = VisaCommunication(gpib_address)
+        self.check_identity()
 
     def check_identity(self, spectrum_name = 'Keysight CXA N9000B'):
         self.print_to_log('Checking Spectrum Identity')
@@ -17,11 +18,20 @@ class SpectrumAnalyzer(object):
             raise SpectrumNotFoundException('{} didnt Found!'.format(spectrum_name))
 
     def reset(self):
+        '''
+        Resets the SA sets all parameters to default
+        :return: None
+        '''
         self.print_to_log('Resetting..')
         self.connection.send('*RST\r\n')
         self.print_to_log('Reset finished')
 
     def set_ref_level(self, ref_level_value):
+        '''
+        sets the ref level and validate the ref after set
+        @:param ref_level_value : ref value
+        :return:None
+        '''
         self.print_to_log('Set Ref level to {}'.format(ref_level_value))
         Validation.validate_input_parameter_in_range('Spectrum Ref level', ref_level_value, -40.0, 60.0)
         self.connection.send('SPEC:REF {}\r\n'.format(ref_level_value))
@@ -29,6 +39,12 @@ class SpectrumAnalyzer(object):
         self.print_to_log('Ref level is {}!'.format(ref_level_value))
 
     def set_center_frequency(self, center_freq):
+        '''
+        sets the center freq and validate the center freq after set
+        @:param center_freq : center freq
+        @:param center_freq : center freq
+        :return: None
+        '''
         self.print_to_log('Set Center freq to {}'.format(center_freq))
         Validation.validate_input_parameter_in_range('Center Freq', center_freq, 50, 7*1E9)
         self.connection.send('SPEC:CENT {}\r\n'.format(center_freq))
